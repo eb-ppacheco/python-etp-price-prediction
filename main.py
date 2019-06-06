@@ -8,15 +8,15 @@ def get_prediction(country_code_input, event_category_input):
     cci = country_code_input
     eci = event_category_input
 
-    # filter by category
-    subset_filter_category = (df.loc[df['category_id'] == eci])
-
     # filter by country
-    subset_filter_country = (subset_filter_category.loc[df['country'] == cci])
+    subset_filter_country = (df.loc[df['country'] == cci])
+
+    # filter by category
+    subset_filter_category = (subset_filter_country.loc[df['category_id'] == eci])
 
     # filter by date
     # TO DO - create a variable to calculate timezone.now - 30 days
-    subset_df_filter_date = subset_filter_country.loc[(subset_filter_country['purchased_at'] < '26-01-2019')]
+    subset_df_filter_date = subset_filter_category.loc[(subset_filter_category['purchased_at'] < '26-01-2019')]
 
     # calculate ticket price per unit
     price_ticket_per_unit = subset_df_filter_date['price_ticket_amount']/subset_df_filter_date['quantity_sold']
@@ -28,7 +28,8 @@ def get_prediction(country_code_input, event_category_input):
     else:
         mean_ticket = price_ticket_per_unit.mean()
         std_ticket = price_ticket_per_unit.std()
-        print ("The mean is: {}, and standard is: {}.".format(mean_ticket, std_ticket))
+        maximum = price_ticket_per_unit.max()
+        print ("The mean is: {}, and standard is: {} and maximum is:{}.".format(mean_ticket, std_ticket, maximum))
 
 
 if __name__ == "__main__":
